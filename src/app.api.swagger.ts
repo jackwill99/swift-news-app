@@ -21,6 +21,28 @@ function swaggerConfig() {
       },
       'Authorization',
     );
+  // .addBearerAuth(undefined, 'Authorization');
+}
+
+/*
+  When you need default bearer authentication, replace your authentication with default
+ */
+function defaultBearerAuth() {
+  return {
+    authAction: {
+      defaultBearerAuth: {
+        name: 'Authorization',
+        schema: {
+          description: 'Default bearer authentication',
+          type: 'http',
+          in: 'header',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+        value: 'thisIsASampleBearerAuthToken123',
+      },
+    },
+  };
 }
 
 export default async function applicationSwaggerConfig(
@@ -38,6 +60,10 @@ export default async function applicationSwaggerConfig(
     include: adminImports,
   });
   SwaggerModule.setup('api/mobile', app, adminDocument, {
-    swaggerOptions: { defaultModelsExpandDepth: -1, docExpansion: 'none' },
+    swaggerOptions: {
+      defaultModelsExpandDepth: -1,
+      docExpansion: 'none',
+      ...defaultBearerAuth(),
+    },
   });
 }
