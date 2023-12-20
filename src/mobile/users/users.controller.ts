@@ -1,13 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../_utils/necessary/public.decorator';
 import { AccessControl } from '../../_utils/acl/acl.decorator';
 import { AccessLevel } from '../../_utils/acl/acl.enum';
+import { MongoIdDto } from '../../_utils/dtos/mongo.id.dto';
 
 @ApiTags('Users')
+@AccessControl.metaData(AccessLevel.ADMIN)
+@ApiBearerAuth('Authorization')
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {
@@ -21,28 +23,20 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Get all of the mobile users' })
-  @ApiBearerAuth('Authorization')
   @Get()
-  @AccessControl.metaData(AccessLevel.ADMIN)
   findAll() {
     return this.usersService.findAll();
   }
 
   @ApiOperation({ summary: 'Take a user information' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
-
-  @ApiOperation({ summary: 'Update User info' })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  findOne(@Param() params: MongoIdDto) {
+    return this.usersService.findOne(params.id);
   }
 
   @ApiOperation({ summary: 'Delete user' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param() params: MongoIdDto) {
+    return this.usersService.remove(params.id);
   }
 }

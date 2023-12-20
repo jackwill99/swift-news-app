@@ -1,14 +1,17 @@
 export const successResponse = (
   message: string,
-  data: {} | [],
+  data?: {} | [],
   extra?: {},
 ): SuccessResponse => {
   const response = {
     error: false,
     authorized: true,
     message: message,
-    data: data,
   };
+
+  if (data !=null){
+    response["data"] = data;
+  }
 
   if (extra != null) {
     response['extra'] = extra;

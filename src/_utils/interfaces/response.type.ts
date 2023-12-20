@@ -2,7 +2,7 @@ type SuccessResponse = {
   error: boolean,
   authorized: boolean,
   message: string,
-  data: {} | [],
+  data?: {} | [],
   extra?: {}
 }
 

@@ -22,6 +22,12 @@ export class User {
 
   @Prop({ type: String })
   token?: string;
+
+  @Prop({ type: Number, default: 1 })
+  status: number;
+
+  @Prop({ type: Number, default: 0 })
+  delete: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

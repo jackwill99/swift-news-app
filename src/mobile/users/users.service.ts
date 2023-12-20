@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import DBConnection from '../../constants/db';
 import { Model } from 'mongoose';
 import { User } from './entities/user.entity';
-import { successResponse } from '../../_utils/necessary/response';
+import { errorResponse, successResponse } from '../../_utils/necessary/response';
 import { generateToken } from '../../_utils/necessary/access.token';
 
 @Injectable()
@@ -17,25 +16,28 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const user = await this.userModel.create(createUserDto);
-    user.token = generateToken({ 'role': createUserDto.role,"id":user.id });
+    user.token = generateToken({ 'role': createUserDto.role, 'id': user.id });
     await user.save();
 
     return successResponse('Create User successfully', user);
   }
 
   async findAll() {
-    return this.userModel.find();
+    const users = await this.userModel.find({ status: 1, delete: 0 });
+    return successResponse('All of user list', users);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    const user = await this.userModel.findById<User>(id, null, { status: 1, delete: 0 });
+    try {
+      return successResponse('User Details', user);
+    } catch (e) {
+      return errorResponse(e);
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.userModel.findByIdAndUpdate(id, { status: 0 });
+    return successResponse('Successfully removed user');
   }
 }
