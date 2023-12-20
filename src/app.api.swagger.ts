@@ -1,6 +1,6 @@
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { adminImports } from './admin/admin.module';
+import { mobileImports } from './mobile/mobile.module';
 import DBConnection from './constants/db';
 
 /**
@@ -10,18 +10,18 @@ function swaggerConfig() {
   return new DocumentBuilder()
     .setDescription('News api for training swift project')
     .addServer(DBConnection.host_1, 'Local Development Server')
-    .addBearerAuth(
-      {
-        type: 'http',
-        in: 'header',
-        description:
-          '##### Auth token in header of this form `Authorization: Bearer xxxx.yyyy.zzzz ,`',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-      },
-      'Authorization',
-    );
-  // .addBearerAuth(undefined, 'Authorization');
+    // .addBearerAuth(
+    //   {
+    //     type: 'http',
+    //     in: 'header',
+    //     description:
+    //       '##### Auth token in header of this form `Authorization: Bearer xxxx.yyyy.zzzz ,`',
+    //     scheme: 'bearer',
+    //     bearerFormat: 'JWT',
+    //   },
+    //   'Authorization',
+    // )
+    .addBearerAuth(undefined, 'Authorization');
 }
 
 /*
@@ -30,7 +30,7 @@ function swaggerConfig() {
 function defaultBearerAuth() {
   return {
     authAction: {
-      defaultBearerAuth: {
+      Authorization: {
         name: 'Authorization',
         schema: {
           description: 'Default bearer authentication',
@@ -39,7 +39,7 @@ function defaultBearerAuth() {
           scheme: 'bearer',
           bearerFormat: 'JWT',
         },
-        value: 'thisIsASampleBearerAuthToken123',
+        value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJpZCI6IjY1ODJiZWQ0ZWQxZjYwNGRiMmYxYTM3OSIsImlhdCI6MTcwMzA2NzM0OCwiZXhwIjoxNzA1NjU5MzQ4fQ.I-ys1sFGEg060Uhgasj-r4vVN5Fk9o3lbgM41WkMTRo',
       },
     },
   };
@@ -57,7 +57,7 @@ export default async function applicationSwaggerConfig(
     .setExternalDoc('Export to Postman Collection', `${DBConnection.host_1}/api/mobile-json`)
     .build();
   const adminDocument = SwaggerModule.createDocument(app, adminConfig, {
-    include: adminImports,
+    include: mobileImports,
   });
   SwaggerModule.setup('api/mobile', app, adminDocument, {
     swaggerOptions: {

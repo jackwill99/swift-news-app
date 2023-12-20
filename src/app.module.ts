@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { AdminModule } from './admin/admin.module';
+import { MobileModule } from './mobile/mobile.module';
 import DBConnection from './constants/db';
 import { CacheRedisModule } from './_utils/cache-redis/cache-redis.module';
 import { FileOperationModule } from './_utils/file-operations/file.operations.module';
@@ -11,7 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    AdminModule,
+    MobileModule,
     ConfigModule.forRoot(),
     GuardCustomModule,
     ThrottlerModule.forRoot([
