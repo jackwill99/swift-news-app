@@ -67,7 +67,7 @@ export default class GuardCustom implements CanActivate {
         context,
       );
 
-      if (!roles) {
+      if (!roles || roles.length == 0) {
         return true;
       }
 

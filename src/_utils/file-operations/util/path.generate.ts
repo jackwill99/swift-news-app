@@ -14,7 +14,7 @@ export default function folderPathGenerate(
   root: string,
   mediaType: string,
   id?: string,
-  isMulter = true
+  isMulter = true,
 ) {
   //! folderPath with given folder name and base path
   const folderPath = `/${root}/${new Date().getFullYear().toString()}/${
@@ -38,7 +38,11 @@ export function fileNameGenerate(ext: string) {
   return crypto.randomUUID().substring(1, 8) + "-" + Date.now() + "." + ext;
 }
 
-export function fileNameMulter(_req, file: Express.Multer.File, callback: (error: Error, filename: string) => void) {
+export function fileNameMulter(
+  _req,
+  file: Express.Multer.File,
+  callback: (error: Error | null, filename: string) => void,
+) {
   const fileExtName = extname(file.originalname).split(".")[1];
   callback(null, fileNameGenerate(fileExtName));
 }

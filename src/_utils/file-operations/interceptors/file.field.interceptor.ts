@@ -1,12 +1,20 @@
-import { CallHandler, ExecutionContext, Inject, mixin, NestInterceptor, Optional, Type } from '@nestjs/common';
-import { Request } from 'express';
-import FastifyMulter from 'fastify-multer';
-import { FileFilterCallback } from 'fastify-multer/lib/interfaces';
-import fs from 'fs';
-import { diskStorage, Multer } from 'multer';
-import { join } from 'path';
-import { Observable } from 'rxjs';
-import folderPathGenerate, { fileNameMulter } from '../util/path.generate';
+import {
+  CallHandler,
+  ExecutionContext,
+  Inject,
+  mixin,
+  NestInterceptor,
+  Optional,
+  Type,
+} from "@nestjs/common";
+import { Request } from "express";
+import FastifyMulter from "fastify-multer";
+import { FileFilterCallback } from "fastify-multer/lib/interfaces";
+import fs from "fs";
+import { diskStorage, Multer } from "multer";
+import { join } from "path";
+import { Observable } from "rxjs";
+import folderPathGenerate, { fileNameMulter } from "../util/path.generate";
 
 /**
  *
@@ -34,8 +42,8 @@ export function FileFieldInterceptor(
 
     constructor(
       @Optional()
-      @Inject('MULTER_MODULE_OPTIONS')
-        options: Multer,
+      @Inject("MULTER_MODULE_OPTIONS")
+      options: Multer,
     ) {
       this.multer = (FastifyMulter as any)({
         ...options,
@@ -44,9 +52,9 @@ export function FileFieldInterceptor(
             const folderGenerate = folderPathGenerate(
               rootFolder,
               mediaType,
-              id == null ? null : id(req),
+              id == null ? undefined : id(req),
             );
-            const result = join(process.cwd() + '/public/' + folderGenerate);
+            const result = join(process.cwd() + "/public/" + folderGenerate);
             if (!fs.existsSync(result)) {
               fs.mkdirSync(result, { recursive: true });
             }

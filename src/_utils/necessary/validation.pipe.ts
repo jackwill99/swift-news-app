@@ -34,10 +34,10 @@ export const validationPipe = new ValidationPipe({
 
 function exceptionFactory(errors: ValidationError[]) {
   return errors.reduce(
-    (acc, e) => {
+    (acc: { message: string; messages: string[] }, e) => {
       const result = { message: acc.message, messages: [...acc.messages] };
 
-      if (e.children.length > 0) {
+      if (e.children != undefined && e.children.length > 0) {
         const tempResult = exceptionFactory(e.children);
         result.message += !result.message.includes(tempResult.message)
           ? `${tempResult.message}`
@@ -45,10 +45,12 @@ function exceptionFactory(errors: ValidationError[]) {
         result.messages.push(...tempResult.messages);
       } else {
         result.message += `${e.property},`;
-        result.messages.push(...Object.values(e.constraints));
+        if (e.constraints) {
+          result.messages.push(...Object.values(e.constraints));
+        }
       }
       return result;
     },
-    { message: "", messages: [] }
+    { message: "", messages: [] },
   );
 }

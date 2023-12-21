@@ -1,14 +1,14 @@
+import { FastifyRequest } from "fastify";
 import fs from "fs";
 import { FileStreamingController } from "../file.streaming.controller";
 import folderPathGenerate, { fileNameGenerate } from "./path.generate";
-import { FastifyRequest } from 'fastify';
 
 export default function fileUpload(
   req: FastifyRequest,
   data: string | Buffer,
   root: string,
   mediaType: string,
-  id?: string
+  id?: string,
 ) {
   const { NODE_ENV } = process.env;
 
@@ -16,9 +16,11 @@ export default function fileUpload(
   const basePath = NODE_ENV === "development" ? "public" : "public";
 
   //! image data
-  let imageData : string;
-  let writeFileOption : fs.WriteFileOptions;
-  let ext = null;
+  let imageData: string;
+  let writeFileOption: fs.WriteFileOptions;
+
+  // default extension is png
+  let ext: string = "png";
 
   if (typeof data === "string") {
     //! split base64

@@ -14,10 +14,10 @@ export class FileStreamingController {
   @Get("*")
   getFile(
     @Req() req: FastifyRequest,
-    @Res({ passthrough: true }) res: FastifyReply
+    @Res({ passthrough: true }) res: FastifyReply,
   ) {
     const file = createReadStream(
-      join(process.cwd(), `/public/${req.params["*"]}`)
+      join(process.cwd(), `/public/${req.params!["*"]}`),
     );
     file.on("error", (err) => {
       console.log("Sorry, Failed to response file content!");
@@ -25,7 +25,7 @@ export class FileStreamingController {
     });
 
     res.headers({
-      "Content-Type": getContentType(req.params["*"]),
+      "Content-Type": getContentType(req.params!["*"]),
       // "Content-Disposition": 'attachment; filename="image.svg"',
     });
 
