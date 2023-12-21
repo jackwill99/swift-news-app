@@ -17,8 +17,12 @@ export class CategoriesService {
     return await this.categoryModel.create(createCategoryDto);
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async findAll(): Promise<Category[] | null> {
+    const categories = await this.categoryModel.find<Category>({
+      status: 1,
+      delete: 0,
+    });
+    return categories;
   }
 
   findOne(id: number) {
