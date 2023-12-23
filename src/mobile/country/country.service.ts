@@ -3,7 +3,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import DBConnection from "../../constants/db";
 import { CreateCountryDto } from "./dto/create-country.dto";
-import { UpdateCountryDto } from "./dto/update-country.dto";
 import { Country } from "./entities/country.entity";
 
 @Injectable()
@@ -17,28 +16,33 @@ export class CountryService {
     return await this.countryModel.create(createCountryDto);
   }
 
-  findAll() {
-    return `This action returns all country`;
+  async findAll(): Promise<Country[]> {
+    const countries = await this.countryModel.find<Country>({
+      status: 1,
+      delete: 0,
+    });
+    return countries;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} country`;
+  async findOne(id: string): Promise<Country | null> {
+    const country = await this.countryModel.findById<Country>(id, null, {
+      status: 1,
+      delete: 0,
+    });
+
+    return country;
   }
 
   async findByName(name: string): Promise<Country | null> {
-    const country = await this.countryModel.find<Country>({ name: name });
+    const country = await this.countryModel.find<Country>({
+      name: name,
+      status: 1,
+      delete: 0,
+    });
 
     if (country[0]) {
       return country[0];
     }
     return null;
-  }
-
-  update(id: number, updateCountryDto: UpdateCountryDto) {
-    return `This action updates a #${id} country`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} country`;
   }
 }

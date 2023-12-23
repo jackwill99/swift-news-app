@@ -3,7 +3,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import DBConnection from "../../constants/db";
 import { CreateCategoryDto } from "./dto/create-category.dto";
-import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { Category } from "./entities/category.entity";
 
 @Injectable()
@@ -17,7 +16,7 @@ export class CategoriesService {
     return await this.categoryModel.create(createCategoryDto);
   }
 
-  async findAll(): Promise<Category[] | null> {
+  async findAll(): Promise<Category[]> {
     const categories = await this.categoryModel.find<Category>({
       status: 1,
       delete: 0,
@@ -25,24 +24,25 @@ export class CategoriesService {
     return categories;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: string): Promise<Category | null> {
+    const category = await this.categoryModel.findById<Category>(id, null, {
+      status: 1,
+      delete: 0,
+    });
+
+    return category;
   }
 
   async findByName(name: string): Promise<Category | null> {
-    const category = await this.categoryModel.find<Category>({ name: name });
+    const category = await this.categoryModel.find<Category>({
+      name: name,
+      status: 1,
+      delete: 0,
+    });
 
     if (category[0]) {
       return category[0];
     }
     return null;
-  }
-
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} category`;
   }
 }
