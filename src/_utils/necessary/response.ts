@@ -9,18 +9,21 @@ export const successResponse = (
     message: message,
   };
 
-  if (data !=null){
+  if (data != null) {
     response["data"] = data;
   }
 
   if (extra != null) {
-    response['extra'] = extra;
+    response["meta"] = extra;
   }
 
   return response;
 };
 
-export const errorResponse = (message: string, authorized = true): ErrorResponse => {
+export const errorResponse = (
+  message: string,
+  authorized = true,
+): ErrorResponse => {
   return {
     error: true,
     authorized: authorized,

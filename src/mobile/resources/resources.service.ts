@@ -27,9 +27,7 @@ export class ResourcesService {
 
   async takeAll() {
     const apiKey = process.env["NEWS_DATA_IO"];
-    // for (let i = 0; i < 31; i++) {
-    //
-    // }
+
     console.log(apiKey);
     await fetch(`${DBConnection.newsDataIo}${apiKey}`).then(
       async (response) => {

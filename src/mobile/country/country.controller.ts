@@ -1,12 +1,11 @@
 import { Controller, Get } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { successResponse } from "src/_utils/necessary/response";
-import { Public } from "../../_utils/necessary/public.decorator";
+import { Public } from "../../_utils/necessary/public.metadata";
 import { CountryService } from "./country.service";
 
 @ApiTags("Country")
-@ApiBearerAuth("Authorization")
-@Public(false)
+@Public(true)
 @Controller()
 export class CountryController {
   constructor(private readonly countryService: CountryService) {}

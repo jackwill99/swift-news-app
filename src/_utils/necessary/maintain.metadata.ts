@@ -1,7 +1,7 @@
 import { SetMetadata } from "@nestjs/common";
-import { DecoratorType } from "../interfaces/decorator.type";
+import { MetaDataType } from "../interfaces/metadata.type";
 
-const MaintainMode: DecoratorType = {
+const MaintainMode: MetaDataType = {
   metaName: "maintain",
   metaStateName: "maintainState",
   metaData: (status: boolean) => SetMetadata("maintain", status),

@@ -2,6 +2,7 @@ import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { ValidationError } from "class-validator";
 
 export const validationPipe = new ValidationPipe({
+  transform: true,
   disableErrorMessages: false,
   exceptionFactory: (errors) => {
     const error = exceptionFactory(errors);

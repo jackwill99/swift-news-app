@@ -1,13 +1,19 @@
-import { CallHandler, ExecutionContext, HttpException, Module, NestInterceptor } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { FastifyRequest } from 'fastify';
-import { catchError, Observable, throwError } from 'rxjs';
+import {
+  CallHandler,
+  ExecutionContext,
+  HttpException,
+  Module,
+  NestInterceptor,
+} from "@nestjs/common";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+import { FastifyRequest } from "fastify";
+import { Observable, catchError, throwError } from "rxjs";
 
 export class ErrorHandlingInterceptor implements NestInterceptor {
   constructor(private message?: string) {}
   async intercept(
     context: ExecutionContext,
-    next: CallHandler
+    next: CallHandler,
   ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest() as FastifyRequest;
 
@@ -33,7 +39,7 @@ export class ErrorHandlingInterceptor implements NestInterceptor {
                     .getClass()
                     .name.replace("Controller", "")}!`,
                 timestamp: new Date().toUTCString(),
-                route: request.routerPath,
+                route: request.routeOptions.url,
                 method: request.method,
                 devMessage:
                   `ClassName: ${context.getClass().name} , Handler: ${
@@ -45,10 +51,10 @@ export class ErrorHandlingInterceptor implements NestInterceptor {
                 log: request.log,
                 body: request.body,
               },
-              err.statusCode || 500
-            )
+              err.statusCode || 500,
+            ),
         );
-      })
+      }),
     );
   }
 }

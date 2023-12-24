@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
-import { UsersModule } from './users/users.module';
-import { ResourcesModule } from './resources/resources.module';
-import { NewsModule } from './news/news.module';
-import { CategoriesModule } from './categories/categories.module';
-import { CountryModule } from './country/country.module';
+import { Module } from "@nestjs/common";
+import { RouterModule } from "@nestjs/core";
+import { CategoriesModule } from "./categories/categories.module";
+import { CountryModule } from "./country/country.module";
+import { NewsModule } from "./news/news.module";
+import { ResourcesModule } from "./resources/resources.module";
+import { UsersModule } from "./users/users.module";
 
 /*
   This is the collection of modules that is related with admin.
@@ -23,35 +23,33 @@ export const mobileImports = [
     ...mobileImports,
     RouterModule.register([
       {
-        path: 'mobile',
+        path: "mobile",
         children: [
           {
-            path: 'users',
+            path: "users",
             module: UsersModule,
           },
           {
-            path: 'resource',
+            path: "resource",
             module: ResourcesModule,
           },
           {
-            path: 'news',
+            path: "news",
             module: NewsModule,
           },
           {
-            path: 'categories',
+            path: "categories",
             module: CategoriesModule,
           },
           {
-            path: 'country',
+            path: "countries",
             module: CountryModule,
           },
         ],
       },
     ]),
-
   ],
   controllers: [],
   providers: [],
 })
-export class MobileModule {
-}
+export class MobileModule {}

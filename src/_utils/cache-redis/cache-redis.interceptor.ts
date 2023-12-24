@@ -1,4 +1,8 @@
-import { CACHE_KEY_METADATA, CACHE_MANAGER, CACHE_TTL_METADATA } from '@nestjs/cache-manager';
+import {
+  CACHE_KEY_METADATA,
+  CACHE_MANAGER,
+  CACHE_TTL_METADATA,
+} from "@nestjs/cache-manager";
 import {
   CallHandler,
   ExecutionContext,
@@ -8,16 +12,16 @@ import {
   NestInterceptor,
   Optional,
   StreamableFile,
-} from '@nestjs/common';
-import { loadPackage } from '@nestjs/common/utils/load-package.util';
-import { isFunction, isNil } from '@nestjs/common/utils/shared.utils';
-import { HttpAdapterHost, Reflector } from '@nestjs/core';
-import { Cache } from 'cache-manager';
-import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import CacheRedis from './cache-redis.decorator';
-import CacheReset from './cache-reset.decorator';
-import { FastifyRequest } from 'fastify';
+} from "@nestjs/common";
+import { loadPackage } from "@nestjs/common/utils/load-package.util";
+import { isFunction, isNil } from "@nestjs/common/utils/shared.utils";
+import { HttpAdapterHost, Reflector } from "@nestjs/core";
+import { Cache } from "cache-manager";
+import { FastifyRequest } from "fastify";
+import { Observable, of } from "rxjs";
+import { tap } from "rxjs/operators";
+import CacheRedis from "./cache-redis.metadata";
+import CacheReset from "./cache-reset.decorator";
 
 /**
  *
@@ -30,7 +34,7 @@ export class CacheRedisInterceptor implements NestInterceptor {
   @Inject()
   protected readonly httpAdapterHost: HttpAdapterHost;
 
-  protected allowedMethods = ['GET'];
+  protected allowedMethods = ["GET"];
 
   private cacheManagerIsv5OrGreater: boolean;
 
@@ -41,11 +45,11 @@ export class CacheRedisInterceptor implements NestInterceptor {
     // We need to check if the cache-manager package is v5 or greater
     // because the set method signature changed in v5
     const cacheManagerPackage = loadPackage(
-      'cache-manager',
-      'CacheModule',
-      () => require('cache-manager'),
+      "cache-manager",
+      "CacheModule",
+      () => require("cache-manager"),
     );
-    this.cacheManagerIsv5OrGreater = 'memoryStore' in cacheManagerPackage;
+    this.cacheManagerIsv5OrGreater = "memoryStore" in cacheManagerPackage;
   }
 
   async intercept(
@@ -58,9 +62,9 @@ export class CacheRedisInterceptor implements NestInterceptor {
       this.reflector.get(CacheRedis.metaName, context.getClass()) ??
       null;
     if (cacheRedis === null || !(cacheRedis as boolean)) {
-      console.log('No cache');
+      console.log("No cache");
       this.cacheOperation(context, this.reflector).then((r) => {
-        console.log('End cache operation');
+        console.log("End cache operation");
       });
       return next.handle();
     }
@@ -79,7 +83,7 @@ export class CacheRedisInterceptor implements NestInterceptor {
       const value = await this.cacheManager.get(key);
       if (!isNil(value)) {
         // jack
-        Logger.warn('Return from cached data ( ' + key + ' )');
+        Logger.warn("Return from cached data ( " + key + " )");
         // jack
         return of(value);
       }
@@ -106,7 +110,7 @@ export class CacheRedisInterceptor implements NestInterceptor {
           } catch (err) {
             Logger.error(
               `An error has occurred when inserting "key: ${key}", "value: ${response}"`,
-              'CacheInterceptor',
+              "CacheInterceptor",
             );
           }
         }),
@@ -172,7 +176,7 @@ export class CacheRedisInterceptor implements NestInterceptor {
       /(\/api\/[\w\d]*\/)([\w]*\/[\w]*)(\/[\w\d]*)?([?=\.&\/\[\]\"\'\w\d]*)?/;
     const urlMatch = url.match(urlRegex);
     await this.resetCacheData(
-      urlMatch[2].split('/')[1],
+      urlMatch[2].split("/")[1],
       context,
       reflector,
       this.cacheManager,
@@ -218,11 +222,11 @@ export class CacheRedisInterceptor implements NestInterceptor {
      * /api/v2/sys/users
      * /api/v2/web/users
      */
-    const apiReg = new RegExp(`/api/[\\w\\d]*/[\\w]*/${key}`, 'g');
+    const apiReg = new RegExp(`/api/[\\w\\d]*/[\\w]*/${key}`, "g");
 
     keys.map(async (v) => {
       if (v.search(apiReg) !== -1) {
-        Logger.error('Cached Reset ' + v);
+        Logger.error("Cached Reset " + v);
         await cacheManager.del(v);
       }
     });

@@ -3,7 +3,7 @@ import { ApiExcludeController } from "@nestjs/swagger";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { createReadStream } from "fs";
 import { join } from "path";
-import { Public } from "../necessary/public.decorator";
+import { Public } from "../necessary/public.metadata";
 import getContentType from "./util/file.contentType";
 
 @Controller("storage")
