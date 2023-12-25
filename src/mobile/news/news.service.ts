@@ -1,11 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import { PaginationDto } from "src/_utils/dtos/pagination.dto";
+import mongoose, { Model } from "mongoose";
 import { aggregateFacetOperation } from "src/_utils/necessary/schema.default";
 import DBConnection from "../../constants/db";
 import { CreateNewsDto } from "./dto/create-news.dto";
-import { UpdateNewsDto } from "./dto/update-news.dto";
+import FilterNewsDto from "./dto/filter-news.dto";
 import { News } from "./entities/news.entity";
 
 @Injectable()
@@ -19,16 +18,31 @@ export class NewsService {
     return news;
   }
 
-  async findAll(pagination: PaginationDto): Promise<{
+  async findAll(pagination: FilterNewsDto): Promise<{
     data: any[];
     meta: { [key: string]: any };
   }> {
+    const categoriesFilter =
+      pagination.categories.length > 0
+        ? {
+            categories: {
+              $in: pagination.categories.map(
+                (item) => new mongoose.Types.ObjectId(item),
+              ),
+            },
+          }
+        : {};
+
     const news = await this.newsModel.aggregate<{
       data: any[];
       meta: { [key: string]: any };
     }>([
       {
-        $match: { status: 1, delete: 0 },
+        $match: {
+          status: 1,
+          delete: 0,
+          ...categoriesFilter,
+        },
       },
       ...pagination.paginationAggregate(),
       {
@@ -58,17 +72,5 @@ export class NewsService {
     news[0].meta["limit"] = pagination.limit;
 
     return news[0];
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} news`;
-  }
-
-  update(id: number, updateNewsDto: UpdateNewsDto) {
-    return `This action updates a #${id} news`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} news`;
   }
 }

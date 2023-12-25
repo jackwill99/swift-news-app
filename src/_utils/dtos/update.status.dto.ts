@@ -1,21 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import {
-  IsInt,
-  IsMongoId,
-  IsNotEmpty,
-  IsString,
-  Max,
-  Min,
-} from "class-validator";
+import { IsInt, Max, Min } from "class-validator";
 
 export class UpdateStatusDto {
-  @IsString()
-  @IsNotEmpty()
-  @IsMongoId()
-  @ApiProperty({ type: String })
-  id: string;
-
   @Transform((param) => parseInt(param.value))
   @IsInt()
   @Min(0)

@@ -10,7 +10,7 @@ import {
     This custom decorator will be useful when mixing mongoId and other properties in your dtos.
     You don't need to extends `MongoIdDto` to take the decorators configuration.
 */
-export default function mongoIdDecorator() {
+export default function MongoIdDecorator() {
   return applyDecorators(
     IsString(),
     IsNotEmpty(),
