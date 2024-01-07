@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { successResponse } from "src/_utils/necessary/response";
 import { Public } from "../../_utils/necessary/public.metadata";
+import { successResponse } from "../../_utils/necessary/response";
 import FilterNewsDto from "./dto/filter-news.dto";
 import { NewsService } from "./news.service";
 

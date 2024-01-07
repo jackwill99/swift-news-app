@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
-import { aggregateFacetOperation } from "src/_utils/necessary/schema.default";
+import { aggregateFacetOperation } from "../../_utils/necessary/schema.default";
 import DBConnection from "../../constants/db";
 import { CreateNewsDto } from "./dto/create-news.dto";
 import FilterNewsDto from "./dto/filter-news.dto";

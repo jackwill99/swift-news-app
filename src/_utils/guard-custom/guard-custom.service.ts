@@ -1,22 +1,22 @@
-import { BadRequestException, CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+} from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { SysAdminService } from "src/admin/sys-admin/sys-admin.service";
 import { verifyToken } from "../necessary/access.token";
 
 import { FastifyRequest } from "fastify";
+import { AccessControl } from "../acl/acl.metadata";
 import MaintainMode from "../necessary/maintain.metadata";
 import { mergeMetaState } from "../necessary/metaState.metadata";
 import { checkPublicState } from "../necessary/public.metadata";
 import { errorResponse } from "../necessary/response";
-import { AccessControl } from "../acl/acl.metadata";
 
 @Injectable()
 export default class GuardCustom implements CanActivate {
-  constructor(
-    private reflector: Reflector,
-    private readonly sysAdminService: SysAdminService
-  ) {
-  }
+  constructor(private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // --------------- Check Maintenance Mode ---------------
@@ -24,14 +24,14 @@ export default class GuardCustom implements CanActivate {
       MaintainMode.metaName,
       MaintainMode.metaStateName,
       this.reflector,
-      context
+      context,
     );
     if (isMaintain.length > 0 && isMaintain[isMaintain.length - 1]) {
       throw new BadRequestException(
         errorResponse(
           "This api endPoint is maintenance now! Try again later",
-          false
-        )
+          false,
+        ),
       );
     }
 
@@ -45,7 +45,7 @@ export default class GuardCustom implements CanActivate {
       const bearerToken = req.headers["authorization"];
       if (typeof bearerToken === "undefined" || bearerToken == "") {
         throw new BadRequestException(
-          errorResponse("Auth token required", false)
+          errorResponse("Auth token required", false),
         );
       }
 
@@ -57,7 +57,7 @@ export default class GuardCustom implements CanActivate {
       const decode = verifyToken(token);
       if (decode == null) {
         throw new BadRequestException(
-          errorResponse("Invalid Auth token", false)
+          errorResponse("Invalid Auth token", false),
         );
       }
 
@@ -66,7 +66,7 @@ export default class GuardCustom implements CanActivate {
         AccessControl.metaName,
         AccessControl.metaStateName,
         this.reflector,
-        context
+        context,
       );
 
       if (!roles || roles.length == 0) {
@@ -76,7 +76,9 @@ export default class GuardCustom implements CanActivate {
       if (roles.includes(decode["role"])) {
         return true;
       } else {
-        throw new BadRequestException(errorResponse("You aren't authorized to access the data!", false));
+        throw new BadRequestException(
+          errorResponse("You aren't authorized to access the data!", false),
+        );
       }
 
       // let user = null;
