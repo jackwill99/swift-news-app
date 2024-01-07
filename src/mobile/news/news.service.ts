@@ -3,9 +3,9 @@ import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { aggregateFacetOperation } from "../../_utils/necessary/schema.default";
 import DBConnection from "../../constants/db";
+import { News } from "../../entities/news.entity";
 import { CreateNewsDto } from "./dto/create-news.dto";
 import FilterNewsDto from "./dto/filter-news.dto";
-import { News } from "./entities/news.entity";
 
 @Injectable()
 export class NewsService {
@@ -33,14 +33,32 @@ export class NewsService {
           }
         : {};
 
+    const countryFilter =
+      pagination.country == null
+        ? {}
+        : {
+            "country.id": new mongoose.Types.ObjectId(pagination.country),
+          };
+
     const news = await this.newsModel.aggregate<{
       data: any[];
       meta: { [key: string]: any };
     }>([
       {
+        $addFields: {
+          "country.id": "$country._id",
+        },
+      },
+      {
+        $project: {
+          "country._id": 0,
+        },
+      },
+      {
         $match: {
           status: 1,
           delete: 0,
+          ...countryFilter,
           ...categoriesFilter,
         },
       },

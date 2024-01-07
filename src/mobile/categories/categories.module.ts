@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { CategoriesService } from './categories.service';
-import { CategoriesController } from './categories.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import DBConnection from '../../constants/db';
-import { Category, CategorySchema } from './entities/category.entity';
+import { Module } from "@nestjs/common";
+import { MongooseModule } from "@nestjs/mongoose";
+import DBConnection from "../../constants/db";
+import { Category, CategorySchema } from "../../entities/category.entity";
+import { CategoriesController } from "./categories.controller";
+import { CategoriesService } from "./categories.service";
 
 @Module({
   imports: [
@@ -16,5 +16,4 @@ import { Category, CategorySchema } from './entities/category.entity';
   providers: [CategoriesService],
   exports: [CategoriesService],
 })
-export class CategoriesModule {
-}
+export class CategoriesModule {}

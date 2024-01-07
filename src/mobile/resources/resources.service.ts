@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import * as process from "process";
 import DBConnection from "../../constants/db";
+import { Category } from "../../entities/category.entity";
+import { Country } from "../../entities/country.entity";
 import { CategoriesService } from "../categories/categories.service";
 import { CreateCategoryDto } from "../categories/dto/create-category.dto";
-import { Category } from "../categories/entities/category.entity";
 import { CountryService } from "../country/country.service";
 import { CreateCountryDto } from "../country/dto/create-country.dto";
-import { Country } from "../country/entities/country.entity";
 import { CreateNewsDto } from "../news/dto/create-news.dto";
 import { NewsService } from "../news/news.service";
 

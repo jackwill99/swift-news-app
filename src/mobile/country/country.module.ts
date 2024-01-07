@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { CountryService } from './country.service';
-import { CountryController } from './country.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Country, CountrySchema } from './entities/country.entity';
-import DBConnection from '../../constants/db';
+import { Module } from "@nestjs/common";
+import { MongooseModule } from "@nestjs/mongoose";
+import DBConnection from "../../constants/db";
+import { Country, CountrySchema } from "../../entities/country.entity";
+import { CountryController } from "./country.controller";
+import { CountryService } from "./country.service";
 
 @Module({
   imports: [
@@ -16,5 +16,4 @@ import DBConnection from '../../constants/db';
   providers: [CountryService],
   exports: [CountryService],
 })
-export class CountryModule {
-}
+export class CountryModule {}

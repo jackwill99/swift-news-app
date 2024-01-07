@@ -1,6 +1,6 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaDefault } from '../../../_utils/necessary/schema.default';
-import mongoose from 'mongoose';
+import { Prop, SchemaFactory } from "@nestjs/mongoose";
+import mongoose from "mongoose";
+import { SchemaDefault } from "../_utils/necessary/schema.default";
 
 @SchemaDefault()
 export class Category {
@@ -15,6 +15,5 @@ export class Category {
   @Prop({ type: Number, default: 0 })
   delete: number;
 }
-
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

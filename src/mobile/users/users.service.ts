@@ -4,8 +4,8 @@ import { Model } from "mongoose";
 import { generateToken } from "../../_utils/necessary/access.token";
 import { Hashing } from "../../_utils/necessary/hashing";
 import DBConnection from "../../constants/db";
+import { User } from "../../entities/user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { User } from "./entities/user.entity";
 
 @Injectable()
 export class UsersService {

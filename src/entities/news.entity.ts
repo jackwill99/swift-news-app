@@ -1,8 +1,8 @@
 import { Prop, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
-import { SchemaDefault } from "../../../_utils/necessary/schema.default";
-import { Category } from "../../categories/entities/category.entity";
-import { Country } from "../../country/entities/country.entity";
+import { SchemaDefault } from "../_utils/necessary/schema.default";
+import { Category } from "./category.entity";
+import { Country } from "./country.entity";
 
 @SchemaDefault()
 export class News {

@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsNotEmpty, IsString, ValidateNested } from "class-validator";
+import { Category } from "../../../entities/category.entity";
+import { Country } from "../../../entities/country.entity";
 import { CreateCategoryDto } from "../../categories/dto/create-category.dto";
-import { Category } from "../../categories/entities/category.entity";
 import { CreateCountryDto } from "../../country/dto/create-country.dto";
-import { Country } from "../../country/entities/country.entity";
 
 export class CreateNewsDto {
   @IsString()
