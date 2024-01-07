@@ -16,6 +16,33 @@ import { join } from "path";
 import { Observable } from "rxjs";
 import folderPathGenerate, { fileNameMulter } from "../util/path.generate";
 
+class FileFieldInterceptorType {
+  /**
+   * @param fieldName  This must be the same property of your body dto to store the value of input file. And, req.file is also your file. You can store the file info into your variable by using UploadFile decorator in nestjs
+   */
+  fieldName: string;
+  /**
+   * @param rootFolder Sub-folder name of public folder. You won't need to declare your `parent public folder name`
+   */
+  rootFolder: string;
+  /**
+   * @param mediaType  Sub-folder name of `rootFolder` or particular `id` folder by categorize of media type
+   */
+  mediaType: string;
+  /**
+   * @param id         (Optional) Sub-folder name of `rootFolder` folder by a particular id
+   */
+  id?: (req: Request) => string | undefined = undefined;
+  /**
+   * @param fileFilter To check and filter of input file
+   */
+  fileFilter?: (
+    req: Request,
+    file: Express.Multer.File,
+    callback: FileFilterCallback,
+  ) => void;
+}
+
 /**
  *
  * #### All the folder name should not include `/` prefix
@@ -27,15 +54,7 @@ import folderPathGenerate, { fileNameMulter } from "../util/path.generate";
  * @returns
  */
 export function FileFieldInterceptor(
-  fieldName: string,
-  rootFolder: string,
-  mediaType: string,
-  id?: (req: Request) => string,
-  fileFilter?: (
-    req: Request,
-    file: Express.Multer.File,
-    callback: FileFilterCallback,
-  ) => void,
+  field: FileFieldInterceptorType,
 ): Type<NestInterceptor> {
   class MixinInterceptor implements NestInterceptor {
     protected multer: any;
@@ -50,9 +69,9 @@ export function FileFieldInterceptor(
         storage: diskStorage({
           destination: (req, file, callback) => {
             const folderGenerate = folderPathGenerate(
-              rootFolder,
-              mediaType,
-              id == null ? undefined : id(req),
+              field.rootFolder,
+              field.mediaType,
+              field.id == null ? undefined : field.id(req),
             );
             const result = join(process.cwd() + "/public/" + folderGenerate);
             if (!fs.existsSync(result)) {
@@ -62,7 +81,7 @@ export function FileFieldInterceptor(
           },
           filename: fileNameMulter,
         }),
-        fileFilter: fileFilter,
+        fileFilter: field.fileFilter,
       });
     }
 
@@ -73,7 +92,7 @@ export function FileFieldInterceptor(
       const ctx = context.switchToHttp();
 
       await new Promise<void>((resolve, reject) =>
-        this.multer.single(fieldName)(
+        this.multer.single(field.fieldName)(
           ctx.getRequest(),
           ctx.getResponse(),
           (error: any) => {

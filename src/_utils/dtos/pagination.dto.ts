@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose, Transform } from "class-transformer";
 import { IsNumber, IsOptional } from "class-validator";
+import { PipelineStage } from "mongoose";
 
 class BasePagination {
   /**
@@ -88,7 +89,7 @@ export class PaginationDto extends BasePagination {
   }
 
   @Expose()
-  paginationAggregate(): any[] {
+  paginationAggregate(): PipelineStage.FacetPipelineStage[] {
     try {
       return this.allowsAll
         ? []
@@ -96,7 +97,7 @@ export class PaginationDto extends BasePagination {
             {
               $skip: this.limit! * (this.page! - 1),
             },
-            { $limit: this.limit },
+            { $limit: this.limit! },
           ];
     } catch (e) {
       throw new Error("Pagination error");

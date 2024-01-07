@@ -1,5 +1,5 @@
 export enum AccessLevel {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-  STAFF = 'STAFF',
+  ADMIN = "ADMIN",
+  USER = "USER",
+  STAFF = "STAFF",
 }

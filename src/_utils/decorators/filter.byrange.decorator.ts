@@ -1,6 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform, Type } from "class-transformer";
+import { DecoratorParamType } from "../interfaces/decorator.param.type";
 
 const filterRange = ["in", "nin"];
 
@@ -14,8 +15,7 @@ export class FilterValueByRange {
     You can also combine some other decorators like `IsOptional()`
 */
 export default function FilterByRangeDecorator(
-  requiredApiProperty: boolean = true,
-  example?: string,
+  options: DecoratorParamType = new DecoratorParamType(),
 ) {
   return applyDecorators(
     Type(() => FilterValueByRange),
@@ -32,13 +32,22 @@ export default function FilterByRangeDecorator(
       if (!filterRange.includes(params[0])) {
         throw new Error("Invalid filtered range");
       }
+
+      if (
+        new RegExp("\\s+").test(params[1]) ||
+        new RegExp("\\s+").test(params[2])
+      ) {
+        throw new Error("Whitespace does not allow");
+      }
+
       return { operator: params[0], from: params[1], to: params[2] };
     }),
     ApiProperty({
-      required: requiredApiProperty,
+      required: options.requiredApiProperty,
       type: String,
-      description: "Full Colon separated filter by range",
-      example: example ?? "in:from:to",
+      description:
+        options.description ?? "Full Colon separated filter by range",
+      example: options.example ?? "in:from:to",
     }),
   );
 }

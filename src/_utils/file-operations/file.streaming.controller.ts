@@ -11,6 +11,7 @@ import getContentType from "./util/file.contentType";
 @ApiExcludeController(true)
 export class FileStreamingController {
   public static path = "/api/v1/storage";
+
   @Get("*")
   getFile(
     @Req() req: FastifyRequest,

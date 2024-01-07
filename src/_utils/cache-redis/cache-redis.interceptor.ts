@@ -1,8 +1,4 @@
-import {
-  CACHE_KEY_METADATA,
-  CACHE_MANAGER,
-  CACHE_TTL_METADATA,
-} from "@nestjs/cache-manager";
+import { CACHE_KEY_METADATA, CACHE_MANAGER, CACHE_TTL_METADATA } from "@nestjs/cache-manager";
 import {
   CallHandler,
   ExecutionContext,
@@ -11,13 +7,12 @@ import {
   Logger,
   NestInterceptor,
   Optional,
-  StreamableFile,
+  StreamableFile
 } from "@nestjs/common";
 import { loadPackage } from "@nestjs/common/utils/load-package.util";
 import { isFunction, isNil } from "@nestjs/common/utils/shared.utils";
 import { HttpAdapterHost, Reflector } from "@nestjs/core";
 import { Cache } from "cache-manager";
-import { FastifyRequest } from "fastify";
 import { Observable, of } from "rxjs";
 import { tap } from "rxjs/operators";
 import CacheRedis from "./cache-redis.metadata";
@@ -40,21 +35,21 @@ export class CacheRedisInterceptor implements NestInterceptor {
 
   constructor(
     @Inject(CACHE_MANAGER) protected readonly cacheManager: Cache,
-    protected readonly reflector: Reflector,
+    protected readonly reflector: Reflector
   ) {
     // We need to check if the cache-manager package is v5 or greater
     // because the set method signature changed in v5
     const cacheManagerPackage = loadPackage(
       "cache-manager",
       "CacheModule",
-      () => require("cache-manager"),
+      () => require("cache-manager")
     );
     this.cacheManagerIsv5OrGreater = "memoryStore" in cacheManagerPackage;
   }
 
   async intercept(
     context: ExecutionContext,
-    next: CallHandler,
+    next: CallHandler
   ): Promise<Observable<any>> {
     //jack
     const cacheRedis =
@@ -110,10 +105,10 @@ export class CacheRedisInterceptor implements NestInterceptor {
           } catch (err) {
             Logger.error(
               `An error has occurred when inserting "key: ${key}", "value: ${response}"`,
-              "CacheInterceptor",
+              "CacheInterceptor"
             );
           }
-        }),
+        })
       );
     } catch {
       return next.handle();
@@ -122,13 +117,13 @@ export class CacheRedisInterceptor implements NestInterceptor {
 
   protected trackBy(
     context: ExecutionContext,
-    reflector: Reflector,
+    reflector: Reflector
   ): string | undefined {
     const httpAdapter = this.httpAdapterHost.httpAdapter;
     const isHttpApp = httpAdapter && !!httpAdapter.getRequestMethod;
     const cacheMetadata = this.reflector.get(
       CACHE_KEY_METADATA,
-      context.getHandler(),
+      context.getHandler()
     );
 
     if (!isHttpApp || cacheMetadata) {
@@ -145,7 +140,7 @@ export class CacheRedisInterceptor implements NestInterceptor {
   }
 
   protected isRequestCacheable(context: ExecutionContext): boolean {
-    const req = context.switchToHttp().getRequest() as FastifyRequest;
+    const req = context.switchToHttp().getRequest();
     return this.allowedMethods.includes(req.method);
   }
 
@@ -158,7 +153,7 @@ export class CacheRedisInterceptor implements NestInterceptor {
    */
   protected async cacheOperation(
     context: ExecutionContext,
-    reflector: Reflector,
+    reflector: Reflector
   ) {
     /**
      * ! QueryAll with random is Get method and never cached before
@@ -167,6 +162,8 @@ export class CacheRedisInterceptor implements NestInterceptor {
     if (this.isRequestCacheable(context)) {
       return;
     }
+
+    // TODO: don't remove updating query of one to one relationship
 
     const httpAdapter = this.httpAdapterHost.httpAdapter;
     const request = context.getArgByIndex(0);
@@ -179,7 +176,7 @@ export class CacheRedisInterceptor implements NestInterceptor {
       urlMatch[2].split("/")[1],
       context,
       reflector,
-      this.cacheManager,
+      this.cacheManager
     );
   }
 
@@ -191,7 +188,7 @@ export class CacheRedisInterceptor implements NestInterceptor {
     resourseUrl: string,
     context: ExecutionContext,
     reflector: Reflector,
-    cacheManager: Cache,
+    cacheManager: Cache
   ) {
     const resetCaches =
       reflector.get<string[]>(CacheReset.metaName, context.getHandler()) ??

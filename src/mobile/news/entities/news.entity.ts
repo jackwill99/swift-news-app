@@ -31,7 +31,7 @@ export class News {
 
   @Prop({
     required: true,
-    type: [{ type: mongoose.Types.ObjectId, ref: Category.name }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: Category.name }],
     default: [],
   })
   categories: Category[];

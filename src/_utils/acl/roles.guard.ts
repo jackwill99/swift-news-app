@@ -2,9 +2,8 @@
 // import { Reflector } from "@nestjs/core";
 // import GuardCustom from "../guard-custom/guard-custom.service";
 // import { mergeMetaState } from "../necessary/metaState.decorator";
-// import { roleMeta, roleMetaState } from "./acl.decorator";
+// import { roleMeta, roleMetaState } from "./roles.decorator";
 //
-// //TODO: It doesn't work, need to fix bro
 // @Injectable()
 // export class RolesGuard extends GuardCustom {
 //   activate(

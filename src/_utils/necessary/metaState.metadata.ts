@@ -1,25 +1,25 @@
-import { ExecutionContext, SetMetadata } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { ExecutionContext, SetMetadata } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 
 export enum MetaStateEnum {
-  OVERRIDE = 'OVERRIDE',
-  MERGE = 'MERGE',
+  OVERRIDE = "OVERRIDE",
+  MERGE = "MERGE",
 }
 
 export const MetaState = (
   metaStateName: string,
-  state: MetaStateEnum = MetaStateEnum.OVERRIDE,
+  state: MetaStateEnum = MetaStateEnum.OVERRIDE
 ) => SetMetadata(metaStateName, state);
 
 export function mergeMetaState<T>(
   name: string,
   metaStateName: string,
   reflector: Reflector,
-  context: ExecutionContext,
+  context: ExecutionContext
 ): T[] {
   const guard = reflector.get<MetaStateEnum>(
     metaStateName,
-    context.getHandler(),
+    context.getHandler()
   );
 
   let result: boolean;
@@ -32,7 +32,7 @@ export function mergeMetaState<T>(
   if (result) {
     return reflector.getAllAndMerge<T[]>(name, [
       context.getHandler(),
-      context.getClass(),
+      context.getClass()
     ]);
   } else {
     const handle = reflector.get<T>(name, context.getHandler());

@@ -1,12 +1,12 @@
 export const successResponse = (
   message: string,
   data?: {} | [],
-  extra?: {},
+  extra?: {}
 ): SuccessResponse => {
   const response = {
     error: false,
     authorized: true,
-    message: message,
+    message: message
   };
 
   if (data != null) {
@@ -20,13 +20,10 @@ export const successResponse = (
   return response;
 };
 
-export const errorResponse = (
-  message: string,
-  authorized = true,
-): ErrorResponse => {
+export const errorResponse = (message: string, authorized = true): ErrorResponse => {
   return {
     error: true,
     authorized: authorized,
-    message: message,
+    message: message
   };
 };

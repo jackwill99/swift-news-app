@@ -2,7 +2,6 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ThrottlerModule } from "@nestjs/throttler";
-import { CacheRedisModule } from "./_utils/cache-redis/cache-redis.module";
 import { FileOperationModule } from "./_utils/file-operations/file.operations.module";
 import { GuardCustomModule } from "./_utils/guard-custom/guard-custom.module";
 import { ErrorHandlingModule } from "./_utils/necessary/error.handling.interceptor";
@@ -38,7 +37,7 @@ import { MobileModule } from "./mobile/mobile.module";
       connectionName: DBConnection.coreDb,
     }),
     ErrorHandlingModule,
-    CacheRedisModule,
+    // CacheRedisModule,
     FileOperationModule,
   ],
 })

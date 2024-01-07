@@ -1,22 +1,22 @@
 import { Schema, SchemaOptions } from "@nestjs/mongoose";
+import { PipelineStage } from "mongoose";
 
 export const SchemaDefault = (
   options?: SchemaOptions,
-  toJsonTransform?: (ret: Record<string, any>) => Record<string, any>
+  toJsonTransform?: (ret: { [key: string]: any }) => { [key: string]: any },
 ) =>
   Schema({
     timestamps: true,
     toJSON: {
       transform: function (doc, ret, opt) {
-        ret.id = ret._id;
+        let modifiedRet: { [key: string]: any } = { id: ret._id, ...ret };
 
-        delete ret["_id"];
-        delete ret["updatedAt"];
-        delete ret["createdAt"];
-        delete ret["delete"];
-        delete ret["__v"];
+        delete modifiedRet["_id"];
+        delete modifiedRet["updatedAt"];
+        delete modifiedRet["createdAt"];
+        delete modifiedRet["delete"];
+        delete modifiedRet["__v"];
 
-        let modifiedRet = ret;
         if (toJsonTransform != undefined) {
           modifiedRet = toJsonTransform(modifiedRet);
         }
@@ -29,7 +29,7 @@ export const SchemaDefault = (
 
 export const aggregateFacetOperation = (extraProject?: {
   [key: string]: 0 | 1;
-}) => [
+}): PipelineStage.FacetPipelineStage[] => [
   {
     $addFields: {
       id: "$_id",

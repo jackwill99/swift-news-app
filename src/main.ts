@@ -1,6 +1,7 @@
 import * as DotEnv from "dotenv";
 import validateEnv from "./_utils/necessary/validate.env";
 import applicationSwaggerConfig from "./app.api.swagger";
+import { ClusterService } from "./app.cluster.service";
 import applicationConfig from "./app.config";
 
 async function application() {
@@ -12,15 +13,11 @@ async function application() {
 
   const app = await applicationConfig();
 
-  if (process.env["NODE_ENV"] === "development") {
-    await applicationSwaggerConfig(app);
-  }
+  await applicationSwaggerConfig(app);
 
   await app.listen(process.env["PORT"]!, "0.0.0.0");
 
-  if (process.env["NODE_ENV"] === "development") {
-    console.log("App is running at " + (await app.getUrl()));
-  }
+  console.log("App is running at " + (await app.getUrl()));
 }
 
-application();
+ClusterService.clusterize(application);

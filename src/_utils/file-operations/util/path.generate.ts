@@ -43,6 +43,7 @@ export function fileNameMulter(
   file: Express.Multer.File,
   callback: (error: Error | null, filename: string) => void,
 ) {
-  const fileExtName = extname(file.originalname).split(".")[1];
-  callback(null, fileNameGenerate(fileExtName));
+  const fileExtName = extname(file.originalname).split(".");
+  const ext = fileExtName[fileExtName.length - 1];
+  callback(null, fileNameGenerate(ext));
 }
