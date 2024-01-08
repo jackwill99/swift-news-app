@@ -10,12 +10,10 @@ const numCPUs = parseInt("1");
 @Injectable()
 export class ClusterService {
   static clusterize(callback: Function): void {
-    console.log("clusterize");
     if (cluster.isPrimary) {
       console.log(`MASTER SERVER (${process.pid}) IS RUNNING `);
 
       for (let i = 0; i < numCPUs; i++) {
-        console.log("loop" + i);
         cluster.fork();
       }
 
@@ -23,7 +21,6 @@ export class ClusterService {
         console.log(`worker ${worker.process.pid} died`);
       });
     } else {
-      console.log("callback");
       callback();
     }
   }
