@@ -11,6 +11,7 @@ function swaggerConfig() {
     new DocumentBuilder()
       .setDescription("News api for training swift project")
       .addServer(DBConnection.host_1, "Local Development Server")
+      .addServer(DBConnection.server_1, "Production Server")
       // .addBearerAuth(
       //   {
       //     type: 'http',
