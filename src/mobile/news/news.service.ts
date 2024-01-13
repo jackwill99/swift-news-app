@@ -66,11 +66,20 @@ export class NewsService {
       filterBySortAggregate(),
       ...pagination.paginationAggregate(),
       {
+        $lookup: {
+          localField: "categories",
+          from: "categories",
+          foreignField: "_id",
+          as: "categories",
+        },
+      },
+      {
         $facet: {
           data: [...aggregateFacetOperation()],
           count: [{ $count: "total" }],
         },
       },
+
       {
         $addFields: {
           count: {
