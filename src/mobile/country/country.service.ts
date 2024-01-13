@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import DBConnection from "../../constants/db";
 import { Country } from "../../entities/country.entity";
 import { CreateCountryDto } from "./dto/create-country.dto";
+import { UpdateCountryDto } from "./dto/update-country.dto";
 
 @Injectable()
 export class CountryService {
@@ -44,5 +45,12 @@ export class CountryService {
       return country[0];
     }
     return null;
+  }
+
+  async update(
+    id: mongoose.Types.ObjectId,
+    updateDto: UpdateCountryDto,
+  ): Promise<Country | null> {
+    return this.countryModel.findByIdAndUpdate<Country>(id, updateDto);
   }
 }

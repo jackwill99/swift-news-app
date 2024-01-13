@@ -29,6 +29,9 @@ export class News {
   @Prop({ type: String })
   imgUrl?: string;
 
+  @Prop({ type: String })
+  videoUrl?: string;
+
   @Prop({
     required: true,
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: Category.name }],

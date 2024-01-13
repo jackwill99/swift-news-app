@@ -39,6 +39,10 @@ export class CreateNewsDto {
   @ApiProperty({ type: String })
   imgUrl?: string;
 
+  @IsString()
+  @ApiProperty({ type: String })
+  videoUrl?: string;
+
   @IsArray({ each: true })
   @ValidateNested({ each: true })
   @Type(() => CreateCategoryDto)

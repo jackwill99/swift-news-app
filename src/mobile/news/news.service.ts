@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
+import { filterBySortAggregate } from "../../_utils/decorators/filter.bysort.decorator";
 import { aggregateFacetOperation } from "../../_utils/necessary/schema.default";
 import DBConnection from "../../constants/db";
 import { News } from "../../entities/news.entity";
@@ -62,6 +63,7 @@ export class NewsService {
           ...categoriesFilter,
         },
       },
+      filterBySortAggregate(),
       ...pagination.paginationAggregate(),
       {
         $facet: {
@@ -90,5 +92,12 @@ export class NewsService {
     news[0].meta["limit"] = pagination.limit;
 
     return news[0];
+  }
+
+  async update(id: mongoose.Types.ObjectId, code: string) {
+    return this.newsModel.updateOne(
+      { _id: id },
+      { $set: { "country.code": code } },
+    );
   }
 }
